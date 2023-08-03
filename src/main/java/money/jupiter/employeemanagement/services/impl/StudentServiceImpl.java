@@ -42,7 +42,7 @@ public class StudentServiceImpl implements StudentService {
     public ResponseEntity<String> addStudent(Student student) {
 
 
-        if(student.getStd() == ' ' || student.getFirstName().isEmpty() || student.getLastName().isEmpty() ){
+        if(  student.getFirstName().isEmpty() || student.getLastName().isEmpty() ){
             return  ResponseEntity.badRequest().body("Enter Student details");
         }
         else{
@@ -68,8 +68,8 @@ public class StudentServiceImpl implements StudentService {
 
     public ResponseEntity<String> updateStudent(Student student){
 
-        if(studentDao.getStudents().stream()
-                .anyMatch(std -> std.getStudentId()
+        if( !student.getFirstName().isEmpty() && !student.getLastName().isEmpty() && studentDao.getStudents().stream()
+                .anyMatch(stud -> stud.getStudentId()
                         .equals(student.getStudentId())))
         {
             return studentDao.updateStudent(student);

@@ -59,15 +59,7 @@ public class StudentDaoImpl implements StudentDao {
                 .orElse(null));
         studentList.set(index,student);
 
-//        int ind = list.indexOf(student);
-//        list.set(ind,student);
-//        for (Student std : list){
-//            if (std.getRoll() == student.getRoll()){
-//                list.remove(std);
-//                list.add(student);
-//                break;
-//            }
-//        }
+
 
         return ResponseEntity.ok("updated student successfully");
     }

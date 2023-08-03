@@ -1,6 +1,7 @@
 package money.jupiter.employeemanagement.repository.impl;
 
 import money.jupiter.employeemanagement.models.EmployeeData;
+import money.jupiter.employeemanagement.repository.EmployeeDAO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
-public class EmployeeDAOImpl implements money.jupiter.employeemanagement.repository.EmployeeDAO {
+public class EmployeeDAOImpl implements EmployeeDAO {
     List<EmployeeData> employeeList= new ArrayList<>();
     @Override
     public List<EmployeeData> getAllEmployees(){

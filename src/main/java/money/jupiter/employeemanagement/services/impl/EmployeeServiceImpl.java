@@ -2,6 +2,7 @@ package money.jupiter.employeemanagement.services.impl;
 
 import money.jupiter.employeemanagement.models.EmployeeData;
 import money.jupiter.employeemanagement.repository.impl.EmployeeDAOImpl;
+import money.jupiter.employeemanagement.services.EmployeeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +11,7 @@ import java.util.UUID;
 
 
 @Service
-public class EmployeeServiceImpl implements money.jupiter.employeemanagement.services.EmployeeService {
+public class EmployeeServiceImpl implements EmployeeService {
     public final EmployeeDAOImpl dataAccessObject;
 
     public EmployeeServiceImpl(EmployeeDAOImpl dataAccessObject) {

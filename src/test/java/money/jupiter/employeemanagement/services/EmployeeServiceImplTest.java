@@ -1,7 +1,8 @@
-package money.jupiter.employeemanagement.services.impl;
+package money.jupiter.employeemanagement.services;
 
 import money.jupiter.employeemanagement.models.EmployeeData;
 import money.jupiter.employeemanagement.repository.impl.EmployeeDAOImpl;
+import money.jupiter.employeemanagement.services.impl.EmployeeServiceImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -18,10 +19,7 @@ class EmployeeServiceImplTest {
     EmployeeDAOImpl employeeDAO = mock(EmployeeDAOImpl.class);
     EmployeeServiceImpl employeeService = new EmployeeServiceImpl(employeeDAO);
 
-    @BeforeAll
-    public void something(){
 
-    }
 
     @Test
     public void testGetAllEmployees() {
