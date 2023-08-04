@@ -1,20 +1,24 @@
 package money.jupiter.employeemanagement.services.impl;
 
 import money.jupiter.employeemanagement.models.EmployeeData;
-import money.jupiter.employeemanagement.repository.impl.EmployeeDAOImpl;
+import money.jupiter.employeemanagement.repository.EmployeeDAO;
 import money.jupiter.employeemanagement.services.EmployeeService;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.security.Key;
 import java.util.List;
 import java.util.UUID;
 
 
 @Service
+@EnableCaching
 public class EmployeeServiceImpl implements EmployeeService {
-    public final EmployeeDAOImpl dataAccessObject;
+    public final EmployeeDAO dataAccessObject;
 
-    public EmployeeServiceImpl(EmployeeDAOImpl dataAccessObject) {
+    public EmployeeServiceImpl(EmployeeDAO dataAccessObject) {
         this.dataAccessObject = dataAccessObject;
     }
 
@@ -23,10 +27,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         return ResponseEntity.ok(dataAccessObject.getAllEmployees());
     }
     @Override
+    @Cacheable(key ="#employeeId",value = "Employee")
     public ResponseEntity<EmployeeData> getEmployeeById(String employeeId){
-        EmployeeData emp=dataAccessObject.getEmployeeById(employeeId);
-         if(emp!=null) ResponseEntity.ok(emp);
-          return ResponseEntity.badRequest().build();
+        if (dataAccessObject.getAllEmployees().stream().anyMatch(i -> i.getEmployeeId().equals(employeeId))) return ResponseEntity.ok(dataAccessObject.getEmployeeById(employeeId));
+        return ResponseEntity.badRequest().build();
 
 
     }

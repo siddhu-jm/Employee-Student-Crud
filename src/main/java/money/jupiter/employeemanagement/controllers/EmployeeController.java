@@ -1,7 +1,7 @@
 package money.jupiter.employeemanagement.controllers;
 
 import money.jupiter.employeemanagement.models.EmployeeData;
-import money.jupiter.employeemanagement.services.impl.EmployeeServiceImpl;
+import money.jupiter.employeemanagement.services.EmployeeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,9 +12,9 @@ import java.util.List;
 
 public class EmployeeController {
 
-    private final EmployeeServiceImpl service;
+    private final EmployeeService service;
 
-    public EmployeeController(EmployeeServiceImpl service) {
+    public EmployeeController(EmployeeService service) {
         this.service = service;
     }
 
