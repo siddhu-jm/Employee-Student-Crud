@@ -1,6 +1,6 @@
 package money.jupiter.employeemanagement.controllers;
 
-import money.jupiter.employeemanagement.models.EmployeeData;
+import money.jupiter.employeemanagement.models.Employee;
 import money.jupiter.employeemanagement.services.impl.EmployeeServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,18 +19,18 @@ public class EmployeeController {
     }
 
     @GetMapping("/employees")
-    public ResponseEntity<List<EmployeeData>> getAllEmployees() {
+    public ResponseEntity<List<Employee>> getAllEmployees() {
 
         return service.getAllEmployees();
     }
 
     @GetMapping("/employees/{employeeId}")
-    public ResponseEntity<EmployeeData> getEmployeeById(@PathVariable String employeeId){
+    public ResponseEntity<Employee> getEmployeeById(@PathVariable String employeeId){
         return service.getEmployeeById(employeeId);
     }
 
     @PostMapping("/employees")
-    public  ResponseEntity<String> addEmployee(@RequestBody EmployeeData emp){
+    public  ResponseEntity<String> addEmployee(@RequestBody Employee emp){
         return service.addEmployee(emp);
     }
 
@@ -40,7 +40,7 @@ public class EmployeeController {
     }
 
     @PutMapping("/employees")
-    public ResponseEntity<String> updateEmployee(@RequestBody EmployeeData emp){
+    public ResponseEntity<String> updateEmployee(@RequestBody Employee emp){
         return service.updateEmployee(emp);
     }
 }

@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 
 @Component
-public class StudentDaoImpl implements StudentDao {
+public class StudentDAOImpl implements StudentDao {
 
     private List<Student> studentList = new ArrayList<Student>();
 

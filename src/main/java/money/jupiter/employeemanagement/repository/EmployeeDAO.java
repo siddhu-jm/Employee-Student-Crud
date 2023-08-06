@@ -1,13 +1,13 @@
 package money.jupiter.employeemanagement.repository;
-import money.jupiter.employeemanagement.models.EmployeeData;
+import money.jupiter.employeemanagement.models.Employee;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 public interface EmployeeDAO {
-    EmployeeData getEmployeeById(String employeeId);
-    List<EmployeeData> getAllEmployees();
-    ResponseEntity<String> postData(EmployeeData emp);
+    Employee getEmployeeById(String employeeId);
+    List<Employee> getAllEmployees();
+    ResponseEntity<String> postData(Employee emp);
     ResponseEntity<String> dropEmployee(String employeeId);
-    ResponseEntity<String> updateEmployee(EmployeeData emp);
+    ResponseEntity<String> updateEmployee(Employee emp);
 }
