@@ -33,7 +33,7 @@ public class StudentServiceImpl implements StudentService {
             return  ResponseEntity.ok().body(studentRepository.findAll());
         }
         catch (DataAccessException e){
-            throw new RuntimeException("An error occurred while retrieving products");
+            throw new RuntimeException("An error occurred while retrieving products",e);
         }
     }
 
@@ -41,19 +41,22 @@ public class StudentServiceImpl implements StudentService {
 
         Student student = cacheService.getStudent(id);
         if(student == null){
-            Optional<Student> optionalStudent = studentRepository.findById(id);
-
-            if (optionalStudent.isPresent()) {
-                return ResponseEntity.ok().body(optionalStudent.get());
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            try {
+                Optional<Student> optionalStudent = studentRepository.findById(id);
+                if (optionalStudent.isPresent()) {
+                    return ResponseEntity.ok().body(optionalStudent.get());
+                }
+                else {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                }
+            }
+            catch (IllegalArgumentException e){
+                throw new IllegalArgumentException("Id must not be Null",e);
             }
         }
         else {
             return ResponseEntity.ok().body(student);
         }
-
-
     }
 
     public ResponseEntity<String> addStudent(Student student) {
@@ -64,7 +67,7 @@ public class StudentServiceImpl implements StudentService {
         else{
             student.setStudentId(UUID.randomUUID().toString());
             try{
-                Student savedStudent = studentRepository.save(student);
+                studentRepository.save(student);
                 cacheService.putStudent(student);
                 return ResponseEntity.ok("Student created successfully");
             }
@@ -89,9 +92,11 @@ public class StudentServiceImpl implements StudentService {
 
     public ResponseEntity<String> updateStudent(Student student){
 
-        if( !student.getFirstName().isEmpty() && !student.getLastName().isEmpty() && studentRepository.findAll().stream()
-                .anyMatch(stud -> stud.getStudentId()
-                .equals(student.getStudentId())))
+        if( !student.getFirstName().isEmpty()
+                && !student.getLastName().isEmpty()
+                && studentRepository.findAll().stream()
+                            .anyMatch(stud -> stud.getStudentId()
+                            .equals(student.getStudentId())))
         {
             studentRepository.save(student);
             cacheService.putStudent(student);

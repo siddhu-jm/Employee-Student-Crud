@@ -8,36 +8,32 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CacheService {
-    private final HashOperations<String, String, Student> hashOperationsStudent;
-    private final HashOperations<String, String, Employee> hashOperationsEmployee;
-    private final RedisTemplate<String,Student> redisTemplateStudent;
+    private final HashOperations<String, String, Student> hashOperationsStud;
 
+    private final HashOperations<String, String, Employee> hashOperationsEmp;
+    private final RedisTemplate<String,Student> redisTemplateStudent;
     private final RedisTemplate<String, Employee> redisTemplateEmployee;
-    public CacheService(RedisTemplate<String,Student> redisTemplate,
-                        HashOperations<String, String, Student> hashOperationsStudent,
-                        HashOperations<String, String, Employee> hashOperationsEmployee,
-                        RedisTemplate<String, Student> redisTemplateStudent,
-                        RedisTemplate<String, Employee> redisTemplateEmployee) {
-        this.hashOperationsStudent = hashOperationsStudent;
-        this.hashOperationsEmployee = hashOperationsEmployee;
+    public CacheService(RedisTemplate<String,Employee> redisTemplateEmp,RedisTemplate<String,Student> redisTemplateStud, RedisTemplate<String, Student> redisTemplateStudent, RedisTemplate<String, Employee> redisTemplateEmployee) {
         this.redisTemplateStudent = redisTemplateStudent;
         this.redisTemplateEmployee = redisTemplateEmployee;
-
+//        this.hashOperations = redisTemplate.opsForHash();
+        this.hashOperationsEmp = redisTemplateEmp.opsForHash();
+        this.hashOperationsStud = redisTemplateStud.opsForHash();
     }
     public void putStudent(Student student){
-        hashOperationsStudent.put("student",student.getStudentId(),student);
+        hashOperationsStud.put("student",student.getStudentId(),student);
     }
 
     public Student getStudent(String id){
-        return hashOperationsStudent.get("student",id);
+        return hashOperationsStud.get("student",id);
     }
 
     public void putEmployee(Employee employee){
-        hashOperationsEmployee.put("employee",employee.getEmployeeId(),employee);
+        hashOperationsEmp.put("employee",employee.getEmployeeId(),employee);
     }
 
     public Employee getEmployee(String id){
-        return hashOperationsEmployee.get("employee",id);
+        return hashOperationsEmp.get("employee",id);
     }
 
 }

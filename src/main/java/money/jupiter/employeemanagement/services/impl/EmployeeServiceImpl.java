@@ -41,9 +41,19 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         Employee employee = cacheService.getEmployee(employeeId);
         if (employee == null){
-            Optional<Employee> emp = employeeRepository.findById(employeeId);
-            if(emp.isPresent() )  ResponseEntity.ok(emp.get());
-            return ResponseEntity.badRequest().build();
+            try {
+                Optional<Employee> emp = employeeRepository.findById(employeeId);
+                if(emp.isPresent() ) {
+                    return ResponseEntity.ok(emp.get());
+                }
+                else {
+                    return ResponseEntity.notFound().build();
+                }
+            }
+            catch (IllegalArgumentException e){
+                throw new IllegalArgumentException("Id must not be NULL",e);
+            }
+
         }
         else {
             return ResponseEntity.ok(employee);

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -48,26 +49,35 @@ class StudentServiceImplTest {
         assertEquals(2, student2.getStd());
     }
 
-//    @Test
-//    public void testGetStudentById() {
-//
-//        ResponseEntity<Student> mockStudent = new ResponseEntity<Student>(new Student("Harsha", "Vardhan", 1, "dfghj-09876"),HttpStatus.OK);
-//
-//        doReturn(mockStudent).when(studentDao).getStudentById("dfghj-09876");
-//        ResponseEntity<Student> data = studentService.getStudentById("dfghj-09876");
-//        Student student = data.getBody();
-//        assertEquals("dfghj-09876",student.getStudentId());
-//    }
+    @Test
+    public void testGetStudentById_Success() {
+
+        Optional<Student> mockStudent = Optional.of(new Student("Harsha", "Vardhan", 1, "dfghj-09876"));
+        doReturn(mockStudent).when(studentRepository).findById("dfghj-09876");
+        ResponseEntity<Student> data = studentService.getStudentById("dfghj-09876");
+        Student student = data.getBody();
+        assertEquals("dfghj-09876",student.getStudentId());
+    }
+
+    @Test
+    public void testGetStudentById_NotSuccess() {
+
+        Student student = null;
+        String id = "12345";
+        Optional<Student> mockStudent = Optional.ofNullable(student);
+        doReturn(null).when(cacheService).getStudent(id);
+        doReturn(mockStudent).when(studentRepository).findById(id);
+        ResponseEntity<Student> response = studentService.getStudentById(id);
+        assertEquals(HttpStatus.NOT_FOUND,response.getStatusCode());
+    }
 
     @Test
     public void testAddStudent_Success(){
 
         Student mockStudent = new Student("Harsha", "Vardhan", 1, "098765");
-
         doReturn(mockStudent).when(studentRepository).save(mockStudent);
         ResponseEntity<String> response = studentService.addStudent(mockStudent);
         assertEquals(HttpStatus.OK,response.getStatusCode());
-
     }
 
     @Test
@@ -82,33 +92,26 @@ class StudentServiceImplTest {
         doReturn(ResponseEntity.ok("Student added successfully")).when(studentRepository).save(mockStudent1);
         ResponseEntity<String> response1 = studentService.addStudent(mockStudent1);
         assertEquals(HttpStatus.BAD_REQUEST,response1.getStatusCode());
-
-
     }
 
     @Test
     public void testDeleteStudent_Success() {
 
         String idToDelete = "098765";
-
         ResponseEntity<String> response = studentService.deleteStudent(idToDelete);
         assertEquals(HttpStatus.NO_CONTENT,response.getStatusCode());
-
     }
 
     @Test
     public void testDeleteStudent_NotSuccess() {
 
         String idToDelete = "12345";
-
         ResponseEntity<String> response = studentService.deleteStudent(idToDelete);
         assertEquals(HttpStatus.NO_CONTENT,response.getStatusCode());
 
         String idToDelete1 = "";
         ResponseEntity<String> response1 = studentService.deleteStudent(idToDelete1);
         assertEquals(HttpStatus.BAD_REQUEST,response1.getStatusCode());
-
-
     }
 
     @Test
@@ -128,7 +131,6 @@ class StudentServiceImplTest {
     public void testUpdateStudent_NotSuccess(){
 
         Student student = new Student("Harsha","",1,"098765");
-
         List<Student> mockStudentList = new ArrayList<>();
         mockStudentList.add(student);
         when(studentRepository.findAll()).thenReturn(mockStudentList);
@@ -141,10 +143,7 @@ class StudentServiceImplTest {
         when(studentRepository.findAll()).thenReturn(mockStudentList1);
         ResponseEntity<String> response1 = studentService.updateStudent(student1);
         assertEquals(HttpStatus.BAD_REQUEST, response1.getStatusCode());
-
     }
-
-
 }
 
 

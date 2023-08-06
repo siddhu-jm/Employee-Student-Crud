@@ -1,6 +1,7 @@
 package money.jupiter.employeemanagement.services;
 
 import money.jupiter.employeemanagement.models.Employee;
+import money.jupiter.employeemanagement.models.Student;
 import money.jupiter.employeemanagement.repository.EmployeeRepository;
 import money.jupiter.employeemanagement.services.cache.CacheService;
 import money.jupiter.employeemanagement.services.impl.EmployeeServiceImpl;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -35,6 +37,7 @@ class EmployeeServiceImplTest {
         List<Employee> employeeList = data.getBody();
         assertNotNull(employeeList);
         assertEquals(2, employeeList.size());
+
         Employee employee1 = employeeList.get(0);
         assertEquals("siddhu", employee1.getFirstName());
         assertEquals("a", employee1.getLastName());
@@ -46,6 +49,27 @@ class EmployeeServiceImplTest {
 
     }
 
+    @Test
+    public void testGetEmployeeById_Success() {
+
+        Optional<Employee> mockEmployee = Optional.of(new Employee("Harsha", "Vardhan", "dfghj-09876"));
+        doReturn(mockEmployee).when(employeeRepository).findById("dfghj-09876");
+        ResponseEntity<Employee> data = employeeService.getEmployeeById("dfghj-09876");
+        Employee employee = data.getBody();
+        assertEquals("dfghj-09876",employee.getEmployeeId());
+    }
+
+    @Test
+    public void testGetEmployeeById_NotSuccess() {
+
+        Employee employee = null;
+        String id = "12345";
+        Optional<Employee> mockEmployee = Optional.ofNullable(employee);
+        doReturn(null).when(cacheService).getEmployee(id);
+        doReturn(mockEmployee).when(employeeRepository).findById(id);
+        ResponseEntity<Employee> response = employeeService.getEmployeeById(id);
+        assertEquals(HttpStatus.NOT_FOUND,response.getStatusCode());
+    }
 
 
     @Test
@@ -56,7 +80,6 @@ class EmployeeServiceImplTest {
         ResponseEntity<String> response = employeeService.addEmployee(emp);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("Employee added successfully", response.getBody());
-
     }
 
     @Test
@@ -80,7 +103,6 @@ class EmployeeServiceImplTest {
         ResponseEntity<String> response = employeeService.updateEmployee(emp);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("Employee updated successfully", response.getBody());
-
     }
 
     @Test
@@ -105,7 +127,6 @@ class EmployeeServiceImplTest {
     public void testDeleteEmployee_Success() {
 
         String idToDelete = "098765";
-
         ResponseEntity<String> response = employeeService.dropEmployee(idToDelete);
         assertEquals(HttpStatus.NO_CONTENT,response.getStatusCode());
     }
@@ -118,7 +139,6 @@ class EmployeeServiceImplTest {
         assertEquals(HttpStatus.NO_CONTENT,response.getStatusCode());
 
         String idToDelete1 = "";
-
         ResponseEntity<String> response1 = employeeService.dropEmployee(idToDelete1);
         assertEquals(HttpStatus.BAD_REQUEST,response1.getStatusCode());
     }
